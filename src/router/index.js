@@ -1,25 +1,34 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import AuthView from '../views/AuthView.vue';
+import idsrvAuth from '@/oidc';
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: AuthView,
   },
   {
     path: '/about',
     name: 'about',
+    meta: {
+      authName: idsrvAuth.authName,
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ '../views/RedirectView.vue'
+      ),
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+idsrvAuth.useRouter(router);
+
+export default router;
